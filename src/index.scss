@@ -1,0 +1,43 @@
+@charset "utf-8";
+// VARIABLES
+
+/* old site
+color: #1a74b1; a tag
+color: #02468f; header link */
+
+$primary: #1e73be;
+$link: #02468f;
+$navbar-item-color: $link;
+
+$footer-color: rgba(255, 255, 255, 0.75);
+$footer-background-color: #363636;
+$footer-padding: 3rem 1.5rem;
+
+$card-header-padding: 0.75rem;
+$card-content-padding: 1rem;
+
+// $control-height: 2.25em;
+// $control-padding-vertical: calc(0.375em - #{$control-border-width});
+// $control-padding-horizontal: calc(0.625em - #{$control-border-width});
+// $button-padding-vertical: calc(0.375em - #{$button-border-width});
+// $button-padding-horizontal: 0.75em;
+
+@import "~bulma/bulma.sass";
+@import "~bulma-helpers/bulma-helpers.sass";
+
+.navbar-start {
+  flex-grow: 1;
+  justify-content: center;
+  font-size: 80%;
+
+  & > a.navbar-item,
+  .navbar-link {
+    @extend .is-uppercase;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+  }
+
+  .active {
+    color: "#aa0000";
+  }
+}

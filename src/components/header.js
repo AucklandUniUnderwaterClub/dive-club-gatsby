@@ -1,42 +1,55 @@
-import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
+import { useStaticQuery, graphql, Link } from "gatsby"
+import Img from "gatsby-image"
+import { Hero, Container, Heading } from "react-bulma-components"
+import Nav from "./nav"
+import styles from "./header.module.scss"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
+const Header = ({ pageTitle }) => {
+  const image = useStaticQuery(graphql`
+    query {
+      headerImage: file(relativePath: { eq: "header.png" }) {
+        childImageSharp {
+          fluid(maxWidth: 400) {
+            ...GatsbyImageSharpFluid
+          }
+        }
+      }
+    }
+  `)
+  return (
+    <>
+      <Container>
+        <Link to="/">
+          <Img
+            className={styles.logo}
+            fluid={image.headerImage.childImageSharp.fluid}
+          />
         </Link>
-      </h1>
-    </div>
-  </header>
-)
+        <Nav />
+      </Container>
+      {pageTitle && (
+        <Hero color="primary">
+          <Hero.Body>
+            <Container>
+              <Heading className="is-uppercase has-text-centered has-text-left-touch">
+                {pageTitle}
+              </Heading>
+            </Container>
+          </Hero.Body>
+        </Hero>
+      )}
+    </>
+  )
+}
 
 Header.propTypes = {
-  siteTitle: PropTypes.string,
+  pageTitle: PropTypes.string,
 }
 
 Header.defaultProps = {
-  siteTitle: ``,
+  pageTitle: ``,
 }
 
 export default Header

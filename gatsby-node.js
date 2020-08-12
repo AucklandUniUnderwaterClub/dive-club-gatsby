@@ -22,12 +22,7 @@ exports.createPages = async ({ graphql, actions }) =>
     `
       {
         allGoogleDocs(
-          filter: {
-            document: {
-              breadcrumb: { nin: "Drafts" }
-              name: { regex: "/^(?!meta-)/" }
-            }
-          }
+          filter: { document: { name: { regex: "/^(?!meta-)/" } } }
         ) {
           nodes {
             id

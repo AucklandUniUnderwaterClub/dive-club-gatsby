@@ -65,6 +65,7 @@ const ContactDetails = () => (
     </Field>
     <Field>
       <Label>Student Status</Label>
+      {/* TODO student-id input */}
       <Control>
         <Radio name="student" value="true">
           Student

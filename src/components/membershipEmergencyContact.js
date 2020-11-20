@@ -8,19 +8,19 @@ const EmergencyContact = () => (
     <Field>
       <Label>Emergency Contact Name</Label>
       <Control>
-        <Input name="emergency-name" />
+        <Input name="emergency-contact-name" />
       </Control>
     </Field>
     <Field>
       <Label>Relationship to you</Label>
       <Control>
-        <Input name="emergency-relationship" />
+        <Input name="emergency-contact-rel" />
       </Control>
     </Field>
     <Field>
       <Label>Emergency Contact Phone Number</Label>
       <Control>
-        <Input name="emergency-phone" />
+        <Input name="emergency-contact-phone" />
       </Control>
     </Field>
   </>

@@ -6,6 +6,7 @@ import EmergencyContactFields from "./membershipEmergencyContact"
 import MedicalDetailsFields from "./membershipMedicalDetails"
 import MiscellaneousFields from "./membershipMiscQuestions"
 
+// TODO: Implement required fields/validation
 const MembershipForm = ({ submit }) => (
   <form onSubmit={submit}>
     <Box>

@@ -25,6 +25,10 @@ $card-content-padding: 1rem;
 @import "~bulma/bulma.sass";
 @import "~bulma-helpers/bulma-helpers.sass";
 
+.radio input {
+  margin-right: 0.3em;
+}
+
 .navbar-start {
   flex-grow: 1;
   justify-content: center;

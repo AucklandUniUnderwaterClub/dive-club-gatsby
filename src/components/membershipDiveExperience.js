@@ -8,7 +8,7 @@ const DiveExperience = () => (
     <Field>
       <Label>Diving Agency</Label>
       <Control>
-        <Input name="agency" list="list-dive-agencies" />
+        <Input name="dive-agency" list="list-dive-agencies" />
         <datalist id="list-dive-agencies">
           <option>Not yet certified</option>
           <option>PADI</option>
@@ -19,10 +19,13 @@ const DiveExperience = () => (
         </datalist>
       </Control>
     </Field>
+    {/* TODO: change so that the following fields are hidden if "Not yet Certified"
+    is selected - add a radio to above? or put certification as first field */}
+    <p>to-do: hide all the following if not Certified</p>
     <Field>
-      <Label>Qualification</Label>
+      <Label>Certification</Label>
       <Control>
-        <Input name="dive-qualification" />
+        <Input name="dive-certification" />
       </Control>
     </Field>
     <Field>

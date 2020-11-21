@@ -5,10 +5,12 @@ import DiveExperienceFields from "./membershipDiveExperience"
 import EmergencyContactFields from "./membershipEmergencyContact"
 import MedicalDetailsFields from "./membershipMedicalDetails"
 import MiscellaneousFields from "./membershipMiscQuestions"
+import PaymentMethods from "./membershipPaymentMethods"
 
 // TODO: Implement required fields/validation
-const MembershipForm = ({ submit }) => (
+const MembershipForm = ({ submit, isLoading, sessionId }) => (
   <form onSubmit={submit}>
+    <input name="session-id" value={sessionId} hidden readOnly />
     <Box>
       <Heading>Contact Details</Heading>
       <ContactDetailsFields />
@@ -29,7 +31,11 @@ const MembershipForm = ({ submit }) => (
       <Heading>Miscellaneous Questions</Heading>
       <MiscellaneousFields />
     </Box>
-    <Button type="submit" color="primary">
+    <Box>
+      <Heading>Payment Method</Heading>
+      <PaymentMethods />
+    </Box>
+    <Button type="submit" color="primary" loading={isLoading}>
       Submit
     </Button>
   </form>

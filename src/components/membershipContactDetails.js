@@ -3,6 +3,8 @@ import { Form } from "react-bulma-components"
 import { Radio, Input } from "./formUtils"
 const { Field, Control, Label, Help } = Form
 
+export const emailName = "email"
+
 const ContactDetails = () => (
   <>
     <Label>Name</Label>
@@ -54,7 +56,7 @@ const ContactDetails = () => (
     <Field>
       <Label>Email</Label>
       <Control>
-        <Input placeholder="Email" name="email" />
+        <Input placeholder="Email" name={emailName} />
       </Control>
     </Field>
     <Field>

@@ -6,6 +6,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import MembershipForm from "../components/membershipForm"
 import { emailName } from "../components/membershipContactDetails"
+import { MEMBER_ID_PARAM } from "../pages/membership-confirmation"
 import {
   CASH,
   CARD,
@@ -37,19 +38,27 @@ const doCardPayment = async (
   const { error } = await stripe.redirectToCheckout({
     mode: "payment",
     lineItems: [{ price: "price_1HCdo9HvqxNwufpjvJCzdk51", quantity: 1 }],
-    successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true`,
+    successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true&${MEMBER_ID_PARAM}=${memberNo}`,
     cancelUrl: `${window.location.origin}/join-us/?id=${clientReferenceId}`,
     customerEmail: email,
     clientReferenceId: clientReferenceId,
   })
-  if (error) console.error(error) // TODO handle stripe checkout error
+  if (error) {
+    console.error(error)
+    setResponse({ result: "error", message: error.message })
+  }
 }
 
-const doManualPayment = paymentMethod => (clientReferenceId, memberNo) => {
+const doManualPayment = paymentMethod => (
+  clientReferenceId,
+  memberNo,
+  email
+) => {
   navigate(`/membership-confirmation/?id=${clientReferenceId}`, {
     state: {
       paymentMethod: paymentMethod,
       membershipNo: memberNo,
+      email: email,
     },
   })
 }
@@ -65,9 +74,9 @@ const submit = (clientReferenceId, setResponse, setIsLoading) => async e => {
   e.preventDefault()
   setIsLoading(true)
   const data = Object.fromEntries(new FormData(e.currentTarget))
-  console.log(JSON.stringify(data))
   const email = data[emailName]
   const paymentMethod = data[paymentMethodInputName]
+  console.log(data)
   let response = await fetch(process.env.GATSBY_URL_SUBMIT_MEMBERSHIP, {
     method: "POST",
     cache: "no-cache",
@@ -78,14 +87,14 @@ const submit = (clientReferenceId, setResponse, setIsLoading) => async e => {
 
   if (!response.ok) {
     // TODO better UI error handle
-    console.error("response not ok:", response)
+    console.error("error response:", response)
     setResponse({ result: "error", response: response })
     setIsLoading(false)
     return
   }
-  setData({ result: "ok", status: "awaiting resonse data" })
+  setResponse({ result: "ok", status: "awaiting response data" })
   const responseData = await response.json()
-  console.log(responseData)
+  console.log("response ok:", responseData)
   pay[paymentMethod](clientReferenceId, responseData?.id, email, setResponse)
 }
 
@@ -100,16 +109,16 @@ const JoinUsPage = ({ location }) => {
   const id = new URLSearchParams(location.search).get("id") || uuid()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [membershipData, setMembershipData] = useState(null)
+  const [submissionResponse, setSubmissionResponse] = useState(null)
   return (
     <Layout title="Join Us">
       <SEO title="Join Us" />
       <MembershipForm
-        submit={submit(id, setMembershipData, setIsSubmitting)}
+        submit={submit(id, setSubmissionResponse, setIsSubmitting)}
         isLoading={isSubmitting}
         sessionId={id}
       />
-      {membershipData && JSON.stringify(membershipData)}
+      {submissionResponse && JSON.stringify(submissionResponse)}
     </Layout>
   )
 }

@@ -2,6 +2,13 @@ const path = require("path")
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
+const googleSheetCreds = process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS
+  ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS)
+  : {
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
+    }
+
 module.exports = {
   siteMetadata: {
     title: `AUUC`,
@@ -66,10 +73,7 @@ module.exports = {
         // }
         //   - https://github.com/googleapis/google-api-nodejs-client#service-to-service-authentication
         //   - https://developers.google.com/identity/protocols/OAuth2ServiceAccount
-        credentials: {
-          client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-          private_key: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
-        },
+        credentials: googleSheetCreds,
         // By implementing a `filterNode(node): boolean` function, you can choose to eliminate some nodes before
         // they're added to Gatsby, the default behaviour is to include all nodes:
         // filterNode: () => true,

@@ -25,33 +25,32 @@ let stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_KEY, {
 //   return stripePromise
 // }
 
-/**
- * Communications with google appscripts can be interfered with by some browser plugins.
- * In particular: a response that has content may get stuck in limbo and the
- * code will wait forever. However an empty response is more likely to get through.
- * A partial work around is to generate an id client-side. Then if a request takes too long
- * the success of the request can be tested by empty HTTP 200 from a separate call.
- */
-const id = new URLSearchParams(window.location.search).get("id") || uuid()
-
-const doCardPayment = async (memberNo, email, setResponse) => {
+const doCardPayment = async (
+  clientReferenceId,
+  memberNo,
+  email,
+  setResponse
+) => {
   // TODO handle different prices
   // const stripe = await getStripe()
   const stripe = await stripePromise
   const { error } = await stripe.redirectToCheckout({
     mode: "payment",
     lineItems: [{ price: "price_1HCdo9HvqxNwufpjvJCzdk51", quantity: 1 }],
-    successUrl: `${window.location.origin}/membership-confirmation/?id=${id}&paid=true`,
-    cancelUrl: `${window.location.origin}/join-us/?id=${id}`,
+    successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true`,
+    cancelUrl: `${window.location.origin}/join-us/?id=${clientReferenceId}`,
     customerEmail: email,
-    clientReferenceId: id,
+    clientReferenceId: clientReferenceId,
   })
   if (error) console.error(error) // TODO handle stripe checkout error
 }
 
-const doManualPayment = paymentMethod => data => {
-  navigate(`/membership-confirmation/?id=${id}`, {
-    state: { paymentMethod: paymentMethod, membershipNo: data },
+const doManualPayment = paymentMethod => (clientReferenceId, memberNo) => {
+  navigate(`/membership-confirmation/?id=${clientReferenceId}`, {
+    state: {
+      paymentMethod: paymentMethod,
+      membershipNo: memberNo,
+    },
   })
 }
 
@@ -61,7 +60,7 @@ const pay = {
   [CASH]: doManualPayment(CASH),
 }
 
-const submit = (setResponse, setIsLoading) => async e => {
+const submit = (clientReferenceId, setResponse, setIsLoading) => async e => {
   // TODO reliability: wait timeout and check submission
   e.preventDefault()
   setIsLoading(true)
@@ -87,17 +86,26 @@ const submit = (setResponse, setIsLoading) => async e => {
   setData({ result: "ok", status: "awaiting resonse data" })
   const responseData = await response.json()
   console.log(responseData)
-  pay[paymentMethod](responseData?.id, email, setResponse)
+  pay[paymentMethod](clientReferenceId, responseData?.id, email, setResponse)
 }
 
-const JoinUsPage = () => {
+const JoinUsPage = ({ location }) => {
+  /**
+   * Communications with google appscripts can be interfered with by some browser plugins.
+   * In particular: a response that has content may get stuck in limbo and the
+   * code will wait forever. However an empty response is more likely to get through.
+   * A partial work around is to generate an id client-side. Then if a request takes too long
+   * the success of the request can be tested by empty HTTP 200 from a separate call.
+   */
+  const id = new URLSearchParams(location.search).get("id") || uuid()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [membershipData, setMembershipData] = useState(null)
   return (
     <Layout title="Join Us">
       <SEO title="Join Us" />
       <MembershipForm
-        submit={submit(setMembershipData, setIsSubmitting)}
+        submit={submit(id, setMembershipData, setIsSubmitting)}
         isLoading={isSubmitting}
         sessionId={id}
       />

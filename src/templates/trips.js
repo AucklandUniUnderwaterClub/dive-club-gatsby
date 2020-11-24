@@ -30,6 +30,7 @@ export default ({
       {trips.map(trip => (
         <Tile kind="parent" size={3} key={trip.id}>
           <Tile renderAs={Card} kind="child" className="flex-column">
+            {/* TODO: use tripCard component */}
             <Card.Header>
               <Card.Header.Title className="is-capitalized">
                 {trip.title}

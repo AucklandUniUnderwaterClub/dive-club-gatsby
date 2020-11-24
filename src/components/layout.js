@@ -12,7 +12,7 @@ import { Content, Container, Footer, Section } from "react-bulma-components"
 import Header from "./header"
 import "../index.scss"
 
-const Layout = ({ children, title: pageTitle }) => {
+const Layout = ({ children, title: pageTitle, section = true }) => {
   // const siteTitle = useStaticQuery(graphql`
   //   query SiteTitleQuery {
   //     site {
@@ -26,11 +26,16 @@ const Layout = ({ children, title: pageTitle }) => {
   return (
     <>
       <Header pageTitle={pageTitle} />
-      <Section>
-        <Container>
-          <main>{children}</main>
-        </Container>
-      </Section>
+      {section ? (
+        <Section>
+          <Container>
+            <main>{children}</main>
+          </Container>
+        </Section>
+      ) : (
+        children
+      )}
+
       <Footer>
         <Container>
           <Content style={{ textAlign: "center" }}>

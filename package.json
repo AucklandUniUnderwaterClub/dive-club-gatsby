@@ -5,6 +5,10 @@
   "version": "0.1.0",
   "author": "Mathew TH <webmaster@unidive.co.nz>",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.13",
     "@stripe/stripe-js": "^1.8.0",
     "bulma-helpers": "^0.3.12",
     "dotenv": "^8.2.0",

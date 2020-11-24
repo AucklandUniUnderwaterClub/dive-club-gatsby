@@ -1,8 +1,7 @@
 import React, { useState } from "react"
 import { graphql } from "gatsby"
-import { Content, Table } from "react-bulma-components"
+import { Content, Table, Tabs } from "react-bulma-components"
 import Layout from "../components/layout"
-import VerticalTabs from "../components/VerticalTabs"
 import SEO from "../components/seo"
 
 export default ({ data: { page, training } }) => {
@@ -16,13 +15,19 @@ export default ({ data: { page, training } }) => {
       />
       <Content>
         <h1>Open Water Courses</h1>
-        TODO: vertical tabs
       </Content>
-      <VerticalTabs
-        activeIndex={selectedCourseIndex}
-        setActiveIndex={setSelectedCourse}
-        tabs={training.courses.map(({ course }) => `Course ${course}`)}
-      />
+
+      <Tabs type="boxed">
+        {training.courses.map(({ course }, index) => (
+          <Tabs.Tab
+            active={index === selectedCourseIndex}
+            onClick={() => setSelectedCourse(index)}
+            key={index}
+          >
+            {`Course ${course}`}
+          </Tabs.Tab>
+        ))}
+      </Tabs>
       {/* <h3>Course: {training.courses[selectedCourseIndex].course}</h3> */}
       <Table>
         <thead>

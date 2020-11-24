@@ -4,7 +4,6 @@ import ContactDetailsFields from "./membershipContactDetails"
 import DiveExperienceFields from "./membershipDiveExperience"
 import EmergencyContactFields from "./membershipEmergencyContact"
 import MedicalDetailsFields from "./membershipMedicalDetails"
-import MiscellaneousFields from "./membershipMiscQuestions"
 import PaymentMethods from "./membershipPaymentMethods"
 
 // TODO: Implement required fields/validation
@@ -26,10 +25,6 @@ const MembershipForm = ({ submit, isLoading, sessionId }) => (
     <Box>
       <Heading>Medical Details</Heading>
       <MedicalDetailsFields />
-    </Box>
-    <Box>
-      <Heading>Miscellaneous Questions</Heading>
-      <MiscellaneousFields />
     </Box>
     <Box>
       <Heading>Payment Method</Heading>

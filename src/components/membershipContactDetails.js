@@ -24,28 +24,6 @@ const ContactDetails = () => (
         <Radio name="gender">Other</Radio>
       </Control>
     </Field>
-    <Label>Address</Label>
-    <Field>
-      <Control>
-        <Input placeholder="Street Address" name="address-street" />
-      </Control>
-    </Field>
-    <Field kind="group">
-      <Control fullwidth>
-        <Input placeholder="Suburb" name="address-suburb" />
-      </Control>
-      <Control fullwidth>
-        <Input placeholder="City" name="address-city" />
-      </Control>
-    </Field>
-    <Field kind="group">
-      <Control fullwidth>
-        <Input placeholder="Postcode" name="address-postcode" />
-      </Control>
-      <Control fullwidth>
-        <Input placeholder="Country" name="address-country" />
-      </Control>
-    </Field>
     <Field>
       <Label>Phone</Label>
       <Control>
@@ -60,19 +38,20 @@ const ContactDetails = () => (
       </Control>
     </Field>
     <Field>
-      <Label>Date of Birth</Label>
-      <Control>
-        <input type="date" className="input" name="dob" />
-      </Control>
-    </Field>
-    <Field>
       <Label>Student Status</Label>
-      {/* TODO student-id input */}
+      {/* TODO change to select input, add student number input
+       */}
       <Control>
-        <Radio name="student" value="true">
-          Student
+        <Radio name="student-status" value="uoa">
+          Student - UoA
         </Radio>
-        <Radio name="student" value="false">
+        <Radio name="student-status" value="other-uni">
+          Student - other Uni
+        </Radio>
+        <Radio name="student-status" value="alumni">
+          UoA Alumni*
+        </Radio>
+        <Radio name="student-status" value="non-student">
           Non-Student
         </Radio>
       </Control>

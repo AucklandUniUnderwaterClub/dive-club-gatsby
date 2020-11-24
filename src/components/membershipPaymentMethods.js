@@ -74,7 +74,7 @@ const MembershipPaymentMethod = () => {
                 checked={paymentMethod === CASH}
                 readOnly
               >
-                Cash
+                Cash/Card (In-person)
               </Radio>
             </Tabs.Tab>
           </Tabs>

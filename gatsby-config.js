@@ -105,6 +105,7 @@ module.exports = {
       },
     },
     `gatsby-plugin-sass`,
+    `gatsby-plugin-netlify`,
     // {
     //   resolve: `gatsby-plugin-purgecss`,
     //   options: {

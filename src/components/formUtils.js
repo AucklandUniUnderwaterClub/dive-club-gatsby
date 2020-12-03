@@ -13,6 +13,12 @@ export const Radio = ({ children, ...rest }) => (
   </label>
 )
 
+export const Select = ({ children, ...rest }) => (
+  <div className="select">
+    <select {...rest}>{children}</select>
+  </div>
+)
+
 export const BooleanFieldRadioWithDetails = ({
   children,
   radioName,

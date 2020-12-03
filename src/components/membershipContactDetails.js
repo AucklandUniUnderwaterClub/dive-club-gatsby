@@ -1,115 +1,101 @@
-import React, { useState } from "react"
+import React from "react"
 import { Form } from "react-bulma-components"
+import * as yup from "yup"
+import StudentStatus, {
+  schema as studentSchema,
+} from "./membershipStudentStatus"
 import { Radio, Input } from "./formUtils"
-const { Field, Control, Label, Help, Radio: ControlledRadio } = Form
+const { Field, Control, Label, Help } = Form
 
 export const emailName = "email"
-export const studentStatusName = "student-status"
-export const isStudent = studentStatus =>
-  studentStatus === "uoa" || studentStatus === "other-uni"
 
-const StudentStatus = () => {
-  const [status, setStatus] = useState(null)
+export const schema = yup
+  .object()
+  .shape({
+    firstName: yup.string().required("First Name is required"),
+    lastName: yup.string().required("Last Name is required"),
+    gender: yup.string().required("Please select a gender"),
+    phone: yup
+      .string()
+      .required("Phone number is required")
+      .matches(/\+?[()-\s\d]{6,15}/, {
+        message: "Must be a valid phone number",
+      }),
+    email: yup
+      .string()
+      .email("Email address must be valid")
+      .required("Email address is required"),
+  })
+  .concat(studentSchema)
+
+const ContactDetails = ({ formContext }) => {
+  const { register, errors } = formContext
   return (
     <>
-      <Field>
-        <Label>Student Status</Label>
-        <Control>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={studentStatusName}
-            value="uoa"
-            checked={status === "uoa"}
-            onChange={() => {
-              setStatus("uoa")
-            }}
-          >
-            Student - UoA
-          </ControlledRadio>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={studentStatusName}
-            value="other-uni"
-            checked={status === "other-uni"}
-            onChange={() => {
-              setStatus("other-uni")
-            }}
-          >
-            Student - other Uni
-          </ControlledRadio>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={studentStatusName}
-            value="alumni"
-            checked={status === "alumni"}
-            onChange={() => {
-              setStatus("alumni")
-            }}
-          >
-            UoA Alumni*
-          </ControlledRadio>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={studentStatusName}
-            value="non-student"
-            checked={status === "non-student"}
-            onChange={() => {
-              setStatus("non-student")
-            }}
-          >
-            Non-Student
-          </ControlledRadio>
+      <Label>Name</Label>
+      <Field kind="group">
+        <Control fullwidth>
+          <Input
+            domRef={register}
+            color={errors?.firstName && "danger"}
+            placeholder="First name"
+            name="firstName"
+          />
+          <Help color="danger">{errors?.firstName?.message}</Help>
         </Control>
-        <Help>
-          <i>*only select Alumni if you graduated within the last 3 years.</i>
-        </Help>
+        <Control fullwidth>
+          <Input
+            domRef={register}
+            color={errors?.lastName && "danger"}
+            placeholder="Last name"
+            name="lastName"
+          />
+          <Help color="danger">{errors?.lastName?.message}</Help>
+        </Control>
       </Field>
-      {isStudent(status) && (
-        <Field>
-          <Label>Student ID</Label>
-          <Control>
-            <Input placeholder="Student ID" name="student-id" />
-          </Control>
-        </Field>
-      )}
+      <Field>
+        <Label>Gender</Label>
+        <Control>
+          <Radio domRef={register} name="gender">
+            Male
+          </Radio>
+          <Radio domRef={register} name="gender">
+            Female
+          </Radio>
+          <Radio domRef={register} name="gender">
+            Other
+          </Radio>
+          <Help color="danger">{errors?.gender?.message}</Help>
+        </Control>
+      </Field>
+      <Field>
+        <Label>Phone</Label>
+        <Control>
+          <Input
+            domRef={register}
+            color={errors?.phone && "danger"}
+            placeholder="Phone"
+            name="phone"
+          />
+          <Help color="danger">{errors?.phone?.message}</Help>
+        </Control>
+        <Help>Mobile or Landline</Help>
+      </Field>
+      <Field>
+        <Label>Email</Label>
+        <Control>
+          <Input
+            domRef={register}
+            color={errors?.[emailName] && "danger"}
+            placeholder="Email"
+            name={emailName}
+          />
+          <Help color="danger">{errors?.[emailName]?.message}</Help>
+        </Control>
+      </Field>
+      <StudentStatus formContext={formContext} />
     </>
   )
 }
-
-const ContactDetails = () => (
-  <>
-    <Label>Name</Label>
-    <Field kind="group">
-      <Control fullwidth>
-        <Input placeholder="First name" name="first-name" />
-      </Control>
-      <Control fullwidth>
-        <Input placeholder="Last name" name="last-name" />
-      </Control>
-    </Field>
-    <Field>
-      <Label>Gender</Label>
-      <Control>
-        <Radio name="gender">Male</Radio>
-        <Radio name="gender">Female</Radio>
-        <Radio name="gender">Other</Radio>
-      </Control>
-    </Field>
-    <Field>
-      <Label>Phone</Label>
-      <Control>
-        <Input placeholder="Phone" name="phone" />
-      </Control>
-      <Help>Mobile or Landline</Help>
-    </Field>
-    <Field>
-      <Label>Email</Label>
-      <Control>
-        <Input placeholder="Email" name={emailName} />
-      </Control>
-    </Field>
-    <StudentStatus />
-  </>
-)
 
 export default ContactDetails

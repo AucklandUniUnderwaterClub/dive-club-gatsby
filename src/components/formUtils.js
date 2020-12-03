@@ -2,20 +2,26 @@ import React, { useState } from "react"
 import { Form } from "react-bulma-components"
 const { Field, Control, Label, Radio: ControlledRadio } = Form
 
-export const Input = ({ children, ...rest }) => (
-  <input className="input" {...rest} />
+export const Input = ({ children, domRef, color, ...rest }) => (
+  <input
+    ref={domRef}
+    className={`input ${color ? `is-${color}` : ""}`}
+    {...rest}
+  />
 )
 
-export const Radio = ({ children, ...rest }) => (
+export const Radio = ({ children, domRef, ...rest }) => (
   <label className="radio has-text-weight-medium">
-    <input type="radio" {...rest} />
+    <input ref={domRef} type="radio" {...rest} />
     {children}
   </label>
 )
 
-export const Select = ({ children, ...rest }) => (
+export const Select = ({ children, domRef, ...rest }) => (
   <div className="select">
-    <select {...rest}>{children}</select>
+    <select ref={domRef} {...rest}>
+      {children}
+    </select>
   </div>
 )
 

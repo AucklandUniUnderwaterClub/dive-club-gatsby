@@ -29,6 +29,12 @@ $card-content-padding: 1rem;
   margin-right: 0.3em;
 }
 
+@media screen and (min-width: $desktop) {
+  .is-3quarter-width-desktop {
+    width: 75%;
+  }
+}
+
 .navbar-start {
   flex-grow: 1;
   justify-content: center;

@@ -3,6 +3,7 @@ import { graphql, Link } from "gatsby"
 import {
   Card,
   Container,
+  Content,
   Heading,
   Icon,
   Section,
@@ -32,6 +33,14 @@ const IndexPage = ({
     <SEO title="Home" />
     <Section>
       <Container>
+        <Content>
+          <p className="is-3quarter-width-desktop" style={{ margin: `auto` }}>
+            Welcome to the Auckland University Underwater Club! We have been
+            taking students out to explore our beautiful moana by offering gear
+            hire, trips, and training at student-friendly prices since 1961! We
+            can’t wait to sea you at one of our upcoming events!
+          </p>
+        </Content>
         <div style={{ maxWidth: `100%`, marginBottom: `1.45rem` }}>
           <Image />
         </div>
@@ -111,8 +120,7 @@ const IndexPage = ({
         </Level>
         <Tile
           kind="ancestor"
-          style={{ width: `75%` }}
-          className="has-margin-left-auto has-margin-right-auto"
+          className="is-3quarter-width-desktop has-margin-left-auto has-margin-right-auto"
         >
           {trips.map(trip => (
             <Tile kind="parent" size={4} key={trip.id}>

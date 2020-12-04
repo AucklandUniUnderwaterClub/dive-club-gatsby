@@ -1,12 +1,25 @@
 import React from "react"
 import { Form } from "react-bulma-components"
+import * as yup from "yup"
 import { BooleanFieldRadioWithDetails } from "./formUtils"
 const { Label } = Form
 
-const MedicalDetails = () => (
+export const schema = yup.object().shape({
+  hasMedicalConditions: yup
+    .boolean()
+    .required("Medical details are required")
+    .typeError("Medical details are required"),
+  medicalConditions: yup.string().when("hasMedicalConditions", {
+    is: value => value,
+    then: yup.string().required("Details are required"),
+  }),
+})
+
+const MedicalDetails = ({ formContext }) => (
   <BooleanFieldRadioWithDetails
-    radioName="has-medical-conditions"
-    detailsName="medical-conditions"
+    formContext={formContext}
+    radioName="hasMedicalConditions"
+    detailsName="medicalConditions"
     detailsLabel="Give us Details"
   >
     <Label>

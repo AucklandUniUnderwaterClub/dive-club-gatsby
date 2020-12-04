@@ -70,13 +70,11 @@ const pay = {
 }
 
 const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
-  ddata,
+  data,
   e
 ) => {
   // TODO reliability: wait timeout and check submission
-  e.preventDefault()
   setIsLoading(true)
-  const data = Object.fromEntries(new FormData(e.target)) //TODO complete form validation, use passed data
   const email = data[emailName]
   const paymentMethod = data[paymentMethodInputName]
   console.log(data)

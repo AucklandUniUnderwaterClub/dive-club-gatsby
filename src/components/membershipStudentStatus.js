@@ -11,6 +11,7 @@ export const isStudent = studentStatus =>
 export const schema = yup.object().shape({
   [studentStatusName]: yup
     .string()
+    .required("Please select your student status")
     .oneOf(
       ["uoa", "other-uni", "alumni", "non-student"],
       "Please select your student status"

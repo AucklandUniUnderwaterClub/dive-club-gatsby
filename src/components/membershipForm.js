@@ -5,12 +5,24 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import ContactDetailsFields, {
   schema as contactSchema,
 } from "./membershipContactDetails"
-import DiveExperienceFields from "./membershipDiveExperience"
-import EmergencyContactFields from "./membershipEmergencyContact"
-import MedicalDetailsFields from "./membershipMedicalDetails"
-import PaymentMethods from "./membershipPaymentMethods"
+import DiveExperienceFields, {
+  schema as diveXpSchema,
+} from "./membershipDiveExperience"
+import EmergencyContactFields, {
+  schema as emergencySchema,
+} from "./membershipEmergencyContact"
+import MedicalDetailsFields, {
+  schema as medicalSchema,
+} from "./membershipMedicalDetails"
+import PaymentMethods, {
+  schema as paymentSchema,
+} from "./membershipPaymentMethods"
 
 const schema = contactSchema
+  .concat(diveXpSchema)
+  .concat(emergencySchema)
+  .concat(medicalSchema)
+  .concat(paymentSchema)
 
 const MembershipForm = ({ onSubmit, isLoading, sessionId }) => {
   const formContext = useForm({
@@ -19,26 +31,32 @@ const MembershipForm = ({ onSubmit, isLoading, sessionId }) => {
   // console.log(formContext.errors)
   return (
     <form onSubmit={formContext.handleSubmit(onSubmit)}>
-      <input name="session-id" value={sessionId} hidden readOnly />
+      <input
+        name="session-id"
+        ref={formContext.register}
+        value={sessionId}
+        hidden
+        readOnly
+      />
       <Box>
         <Heading>Contact Details</Heading>
         <ContactDetailsFields formContext={formContext} />
       </Box>
       <Box>
         <Heading>Diving Experience</Heading>
-        <DiveExperienceFields />
+        <DiveExperienceFields formContext={formContext} />
       </Box>
       <Box>
         <Heading>Emergency Contact Details</Heading>
-        <EmergencyContactFields />
+        <EmergencyContactFields formContext={formContext} />
       </Box>
       <Box>
         <Heading>Medical Details</Heading>
-        <MedicalDetailsFields />
+        <MedicalDetailsFields formContext={formContext} />
       </Box>
       <Box>
         <Heading>Payment Method</Heading>
-        <PaymentMethods />
+        <PaymentMethods formContext={formContext} />
       </Box>
       <Button type="submit" color="primary" loading={isLoading}>
         Submit

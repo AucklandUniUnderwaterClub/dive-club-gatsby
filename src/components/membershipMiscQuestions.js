@@ -3,6 +3,10 @@ import { Form } from "react-bulma-components"
 import { BooleanFieldRadioWithDetails, Radio } from "./formUtils"
 const { Field, Control, Label } = Form
 
+/**
+ * Currently unused, was intended to be flexible - getting questions from a google sheet.
+ * Will need to be hooked up with yup and react-hook-form to be used
+ */
 const MiscellaneousQuestions = () => (
   <>
     <BooleanFieldRadioWithDetails

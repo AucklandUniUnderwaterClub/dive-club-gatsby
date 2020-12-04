@@ -14,11 +14,16 @@ export const schema = yup
   .shape({
     firstName: yup.string().required("First Name is required"),
     lastName: yup.string().required("Last Name is required"),
-    gender: yup.string().required("Please select a gender"),
+    gender: yup
+      .string()
+      .required("Please select a gender")
+      .oneOf(["male", "female", "other"], "Please select a gender"),
     phone: yup
       .string()
       .required("Phone number is required")
-      .matches(/\+?[()-\s\d]{6,15}/, {
+      .min(6, "Number too short")
+      .max(17, "Number too long")
+      .matches(/\+?[()-\s\d]{6,16}/, {
         message: "Must be a valid phone number",
       }),
     email: yup
@@ -56,13 +61,13 @@ const ContactDetails = ({ formContext }) => {
       <Field>
         <Label>Gender</Label>
         <Control>
-          <Radio domRef={register} name="gender">
+          <Radio domRef={register} name="gender" value="male">
             Male
           </Radio>
-          <Radio domRef={register} name="gender">
+          <Radio domRef={register} name="gender" value="female">
             Female
           </Radio>
-          <Radio domRef={register} name="gender">
+          <Radio domRef={register} name="gender" value="other">
             Other
           </Radio>
           <Help color="danger">{errors?.gender?.message}</Help>

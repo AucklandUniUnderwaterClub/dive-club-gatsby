@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React from "react"
 import { Form } from "react-bulma-components"
-const { Field, Control, Label, Radio: ControlledRadio } = Form
+const { Field, Control, Help, Label } = Form
 
 export const Input = ({ children, domRef, color, ...rest }) => (
   <input
@@ -17,8 +17,8 @@ export const Radio = ({ children, domRef, ...rest }) => (
   </label>
 )
 
-export const Select = ({ children, domRef, ...rest }) => (
-  <div className="select">
+export const Select = ({ children, domRef, color, ...rest }) => (
+  <div className={`select ${color ? `is-${color}` : ""}`}>
     <select ref={domRef} {...rest}>
       {children}
     </select>
@@ -26,46 +26,38 @@ export const Select = ({ children, domRef, ...rest }) => (
 )
 
 export const BooleanFieldRadioWithDetails = ({
+  formContext: { watch, register, errors },
   children,
   radioName,
   detailsName,
   detailsLabel,
 }) => {
-  const [radioBool, setRadioBool] = useState(null)
+  const radioBool = watch(radioName)
   return (
     <>
       <Field>
         {children}
         <Control>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={radioName}
-            value="yes"
-            checked={radioBool === true}
-            onChange={() => {
-              setRadioBool(true)
-            }}
-          >
+          <Radio domRef={register} name={radioName} value="true">
             Yes
-          </ControlledRadio>
-          <ControlledRadio
-            className="has-text-weight-medium"
-            name={radioName}
-            value="no"
-            checked={radioBool === false}
-            onChange={() => {
-              setRadioBool(false)
-            }}
-          >
+          </Radio>
+          <Radio domRef={register} name={radioName} value="false">
             No
-          </ControlledRadio>
+          </Radio>
+          <Help color="danger">{errors?.[radioName]?.message}</Help>
         </Control>
       </Field>
-      {radioBool && (
+      {radioBool === "true" && (
         <Field>
           <Label>{detailsLabel}</Label>
           <Control>
-            <textarea className="textarea" name={detailsName} rows="2" />
+            <textarea
+              ref={register}
+              className={`textarea ${errors?.[detailsName] ? `is-danger` : ""}`}
+              name={detailsName}
+              rows="2"
+            />
+            <Help color="danger">{errors?.[detailsName]?.message}</Help>
           </Control>
         </Field>
       )}

@@ -1,11 +1,20 @@
 import React, { useState } from "react"
 import { Content, Tabs, Form } from "react-bulma-components"
-const { Field, Control, Radio } = Form
+import * as yup from "yup"
+import { Radio } from "./formUtils"
+const { Field, Control } = Form
 
 export const CARD = "card"
 export const TRANSFER = "transfer"
 export const CASH = "cash"
 export const inputName = "payment-method"
+
+export const schema = yup.object().shape({
+  [inputName]: yup
+    .string()
+    .required("Please select a payment method")
+    .oneOf([CARD, CASH, TRANSFER], "Please select a payment method"),
+})
 
 const BankDetails = () => (
   <>
@@ -20,7 +29,7 @@ const BankDetails = () => (
   </>
 )
 
-const MembershipPaymentMethod = () => {
+const MembershipPaymentMethod = ({ formContext: { register } }) => {
   const [paymentMethod, setPaymentMethod] = useState(CARD)
   return (
     <>
@@ -42,6 +51,7 @@ const MembershipPaymentMethod = () => {
                 name={inputName}
                 value={CARD}
                 checked={paymentMethod === CARD}
+                domRef={register}
                 readOnly
               >
                 Card
@@ -57,6 +67,7 @@ const MembershipPaymentMethod = () => {
                 name={inputName}
                 value={TRANSFER}
                 checked={paymentMethod === TRANSFER}
+                domRef={register}
                 readOnly
               >
                 Bank Transfer
@@ -72,6 +83,7 @@ const MembershipPaymentMethod = () => {
                 name={inputName}
                 value={CASH}
                 checked={paymentMethod === CASH}
+                domRef={register}
                 readOnly
               >
                 Cash/Card (In-person)

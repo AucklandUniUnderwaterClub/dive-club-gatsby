@@ -1,10 +1,8 @@
 import React from "react"
 import { Form } from "react-bulma-components"
 import * as yup from "yup"
-import StudentStatus, {
-  schema as studentSchema,
-} from "./membershipStudentStatus"
-import { Radio, Input } from "./formUtils"
+import StudentStatus, { schema as studentSchema } from "./studentStatus"
+import { Radio, Input } from "../formUtils"
 const { Field, Control, Label, Help } = Form
 
 export const emailName = "email"

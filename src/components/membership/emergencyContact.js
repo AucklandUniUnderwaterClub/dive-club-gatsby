@@ -1,7 +1,7 @@
 import React from "react"
 import { Form } from "react-bulma-components"
 import * as yup from "yup"
-import { Input } from "./formUtils"
+import { Input } from "../formUtils"
 const { Field, Control, Label, Help } = Form
 
 export const schema = yup.object().shape({

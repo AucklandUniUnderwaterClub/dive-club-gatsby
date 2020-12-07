@@ -1,7 +1,7 @@
 import React from "react"
 import { Form } from "react-bulma-components"
 import * as yup from "yup"
-import { BooleanFieldRadioWithDetails } from "./formUtils"
+import { BooleanFieldRadioWithDetails } from "../formUtils"
 const { Label } = Form
 
 export const schema = yup.object().shape({

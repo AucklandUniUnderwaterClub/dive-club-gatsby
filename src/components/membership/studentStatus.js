@@ -1,7 +1,7 @@
 import React from "react"
 import { Form } from "react-bulma-components"
 import * as yup from "yup"
-import { Input, Radio } from "./formUtils"
+import { Input, Radio } from "../formUtils"
 const { Field, Control, Label, Help } = Form
 
 export const studentStatusName = "studentStatus"

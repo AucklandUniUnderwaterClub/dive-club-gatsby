@@ -2,21 +2,13 @@ import React from "react"
 import { Box, Button, Heading } from "react-bulma-components"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import ContactDetailsFields, {
-  schema as contactSchema,
-} from "./membershipContactDetails"
-import DiveExperienceFields, {
-  schema as diveXpSchema,
-} from "./membershipDiveExperience"
+import ContactDetailsFields, { schema as contactSchema } from "./contactDetails"
+import DiveExperienceFields, { schema as diveXpSchema } from "./diveExperience"
 import EmergencyContactFields, {
   schema as emergencySchema,
-} from "./membershipEmergencyContact"
-import MedicalDetailsFields, {
-  schema as medicalSchema,
-} from "./membershipMedicalDetails"
-import PaymentMethods, {
-  schema as paymentSchema,
-} from "./membershipPaymentMethods"
+} from "./emergencyContact"
+import MedicalDetailsFields, { schema as medicalSchema } from "./medicalDetails"
+import PaymentMethods, { schema as paymentSchema } from "./paymentMethods"
 
 const schema = contactSchema
   .concat(diveXpSchema)

@@ -4,15 +4,15 @@ import { loadStripe } from "@stripe/stripe-js"
 import { v4 as uuid } from "uuid"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import MembershipForm from "../components/membershipForm"
-import { emailName } from "../components/membershipContactDetails"
+import MembershipForm from "../components/membership/form"
+import { emailName } from "../components/membership/contactDetails"
 import { MEMBER_ID_PARAM } from "../pages/membership-confirmation"
 import {
   CASH,
   CARD,
   TRANSFER,
   inputName as paymentMethodInputName,
-} from "../components/membershipPaymentMethods"
+} from "../components/membership/paymentMethods"
 
 let stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_KEY, {
   apiVersion: "2020-03-02",

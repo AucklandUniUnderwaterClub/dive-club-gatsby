@@ -1,6 +1,6 @@
 import React from "react"
 import { Form } from "react-bulma-components"
-import { BooleanFieldRadioWithDetails, Radio } from "./formUtils"
+import { BooleanFieldRadioWithDetails, Radio } from "../formUtils"
 const { Field, Control, Label } = Form
 
 /**

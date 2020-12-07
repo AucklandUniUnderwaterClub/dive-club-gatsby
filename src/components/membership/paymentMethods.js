@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Content, Tabs, Form } from "react-bulma-components"
 import * as yup from "yup"
-import { Radio } from "./formUtils"
+import { Radio } from "../formUtils"
 const { Field, Control } = Form
 
 export const CARD = "card"

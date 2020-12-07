@@ -1,11 +1,15 @@
 import React, { useState } from "react"
-import { navigate } from "gatsby"
+import { graphql, navigate } from "gatsby"
 import { loadStripe } from "@stripe/stripe-js"
 import { v4 as uuid } from "uuid"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import MembershipForm from "../components/membership/form"
 import { emailName } from "../components/membership/contactDetails"
+import {
+  studentStatusName,
+  isStudent,
+} from "../components/membership/studentStatus"
 import { MEMBER_ID_PARAM } from "../pages/membership-confirmation"
 import {
   CASH,
@@ -30,6 +34,7 @@ const doCardPayment = async (
   clientReferenceId,
   memberNo,
   email,
+  priceId,
   setResponse
 ) => {
   // TODO handle different prices
@@ -37,7 +42,7 @@ const doCardPayment = async (
   const stripe = await stripePromise
   const { error } = await stripe.redirectToCheckout({
     mode: "payment",
-    lineItems: [{ price: "price_1HCdo9HvqxNwufpjvJCzdk51", quantity: 1 }],
+    lineItems: [{ price: priceId, quantity: 1 }],
     successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true&${MEMBER_ID_PARAM}=${memberNo}`,
     cancelUrl: `${window.location.origin}/join-us/?id=${clientReferenceId}`,
     customerEmail: email,
@@ -77,6 +82,9 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
   setIsLoading(true)
   const email = data[emailName]
   const paymentMethod = data[paymentMethodInputName]
+  const priceId = isStudent(data[studentStatusName])
+    ? prices.studentPriceStripeId
+    : prices.nonStudentPriceStripeId
   console.log(data)
   let response = await fetch(process.env.GATSBY_URL_SUBMIT_MEMBERSHIP, {
     method: "POST",
@@ -96,10 +104,21 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
   setResponse({ result: "ok", status: "awaiting response data" })
   const responseData = await response.json()
   console.log("response ok:", responseData)
-  pay[paymentMethod](clientReferenceId, responseData?.id, email, setResponse)
+  pay[paymentMethod](
+    clientReferenceId,
+    responseData?.id,
+    email,
+    priceId,
+    setResponse
+  )
 }
 
-const JoinUsPage = ({ location }) => {
+const JoinUsPage = ({
+  location,
+  data: {
+    allGoogleSpreadsheetMembershipPrices: { pricePeriods },
+  },
+}) => {
   /**
    * Communications with google appscripts can be interfered with by some browser plugins.
    * In particular: a response that has content may get stuck in limbo and the
@@ -111,11 +130,14 @@ const JoinUsPage = ({ location }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionResponse, setSubmissionResponse] = useState(null)
+  const prices = pricePeriods.filter(
+    period => period.startDate >= 0 && period.endDate <= 0
+  )[0]
   return (
     <Layout title="Join Us">
       <SEO title="Join Us" />
       <MembershipForm
-        onSubmit={submit(id, setSubmissionResponse, setIsSubmitting)}
+        onSubmit={submit(id, setSubmissionResponse, setIsSubmitting, prices)}
         isLoading={isSubmitting}
         sessionId={id}
       />
@@ -123,5 +145,18 @@ const JoinUsPage = ({ location }) => {
     </Layout>
   )
 }
+
+export const query = graphql`
+  query {
+    allGoogleSpreadsheetMembershipPrices {
+      pricePeriods: nodes {
+        startDate(difference: "days")
+        endDate(difference: "days")
+        studentPriceStripeId
+        nonStudentPriceStripeId
+      }
+    }
+  }
+`
 
 export default JoinUsPage

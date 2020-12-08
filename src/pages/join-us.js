@@ -18,12 +18,12 @@ import {
   inputName as paymentMethodInputName,
 } from "../components/membership/paymentMethods"
 
-let stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_KEY, {
+let stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_PUBLIC_KEY, {
   apiVersion: "2020-03-02",
 })
 // const getStripe = () => {
 //   if (!stripePromise) {
-//     stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_KEY, {
+//     stripePromise = loadStripe(process.env.GATSBY_STRIPE_API_PUBLIC_KEY, {
 //       apiVersion: "2020-03-02",
 //     })
 //   }

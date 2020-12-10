@@ -34,7 +34,7 @@ const doCardPayment = async (
   clientReferenceId,
   memberNo,
   email,
-  priceId,
+  price,
   setResponse
 ) => {
   // TODO handle different prices
@@ -42,7 +42,7 @@ const doCardPayment = async (
   const stripe = await stripePromise
   const { error } = await stripe.redirectToCheckout({
     mode: "payment",
-    lineItems: [{ price: priceId, quantity: 1 }],
+    lineItems: [{ price: price.id, quantity: 1 }],
     successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true&${MEMBER_ID_PARAM}=${memberNo}`,
     cancelUrl: `${window.location.origin}/join-us/?id=${clientReferenceId}`,
     customerEmail: email,
@@ -82,9 +82,9 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
   setIsLoading(true)
   const email = data[emailName]
   const paymentMethod = data[paymentMethodInputName]
-  const priceId = isStudent(data[studentStatusName])
-    ? prices.studentPriceStripeId
-    : prices.nonStudentPriceStripeId
+  const price = isStudent(data[studentStatusName])
+    ? prices.student
+    : prices.nonStudent
   console.log(data)
   let response = await fetch(process.env.GATSBY_URL_SUBMIT_MEMBERSHIP, {
     method: "POST",
@@ -108,15 +108,31 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
     clientReferenceId,
     responseData?.id,
     email,
-    priceId,
+    price,
     setResponse
   )
+}
+
+// TODO put price data merge somewhere else (with build time execution)
+const mergePriceData = (pricePeriods, stripePrices) => {
+  const currentPeriod = pricePeriods.find(
+    period => period.startDate >= 0 && period.endDate <= 0
+  )
+  return {
+    student: stripePrices.find(
+      price => price.id === currentPeriod.studentPriceStripeId
+    ),
+    nonStudent: stripePrices.find(
+      price => price.id === currentPeriod.nonStudentPriceStripeId
+    ),
+  }
 }
 
 const JoinUsPage = ({
   location,
   data: {
     allGoogleSpreadsheetMembershipPrices: { pricePeriods },
+    allStripePrice: { stripePrices },
   },
 }) => {
   /**
@@ -130,9 +146,8 @@ const JoinUsPage = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionResponse, setSubmissionResponse] = useState(null)
-  const prices = pricePeriods.filter(
-    period => period.startDate >= 0 && period.endDate <= 0
-  )[0]
+  const prices = mergePriceData(pricePeriods, stripePrices)
+
   return (
     <Layout title="Join Us">
       <SEO title="Join Us" />
@@ -140,6 +155,7 @@ const JoinUsPage = ({
         onSubmit={submit(id, setSubmissionResponse, setIsSubmitting, prices)}
         isLoading={isSubmitting}
         sessionId={id}
+        prices={prices}
       />
       {submissionResponse && JSON.stringify(submissionResponse)}
     </Layout>
@@ -154,6 +170,12 @@ export const query = graphql`
         endDate(difference: "days")
         studentPriceStripeId
         nonStudentPriceStripeId
+      }
+    }
+    allStripePrice(filter: { active: { eq: true } }) {
+      stripePrices: nodes {
+        id
+        unit_amount
       }
     }
   }

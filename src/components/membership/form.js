@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, Heading } from "react-bulma-components"
+import { Box, Button, Content, Heading } from "react-bulma-components"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import ContactDetailsFields, { schema as contactSchema } from "./contactDetails"
@@ -9,6 +9,7 @@ import EmergencyContactFields, {
 } from "./emergencyContact"
 import MedicalDetailsFields, { schema as medicalSchema } from "./medicalDetails"
 import PaymentMethods, { schema as paymentSchema } from "./paymentMethods"
+import { studentStatusName, isStudent } from "./studentStatus"
 
 const schema = contactSchema
   .concat(diveXpSchema)
@@ -16,11 +17,16 @@ const schema = contactSchema
   .concat(medicalSchema)
   .concat(paymentSchema)
 
-const MembershipForm = ({ onSubmit, isLoading, sessionId }) => {
+const MembershipForm = ({ onSubmit, isLoading, sessionId, prices }) => {
   const formContext = useForm({
     resolver: yupResolver(schema),
   })
-  // console.log(formContext.errors)
+  const studentStatus = formContext.watch(studentStatusName)
+  const price = studentStatus
+    ? isStudent(studentStatus)
+      ? prices.student
+      : prices.nonStudent
+    : null
   return (
     <form onSubmit={formContext.handleSubmit(onSubmit)}>
       <input
@@ -49,6 +55,11 @@ const MembershipForm = ({ onSubmit, isLoading, sessionId }) => {
       <Box>
         <Heading>Payment Method</Heading>
         <PaymentMethods formContext={formContext} />
+        {price && (
+          <Content>
+            <b>Total:</b> ${(price.unit_amount / 100).toFixed(2)}
+          </Content>
+        )}
       </Box>
       <Button type="submit" color="primary" loading={isLoading}>
         Submit

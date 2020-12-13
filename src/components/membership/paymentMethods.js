@@ -16,7 +16,7 @@ export const schema = yup.object().shape({
     .oneOf([CARD, CASH, TRANSFER], "Please select a payment method"),
 })
 
-const BankDetails = () => (
+export const BankDetails = () => (
   <>
     Auckland University Underwater Club
     <br />

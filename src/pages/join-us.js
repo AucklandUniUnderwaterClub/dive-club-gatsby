@@ -44,7 +44,7 @@ const doCardPayment = async (
     mode: "payment",
     lineItems: [{ price: price.id, quantity: 1 }],
     successUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=true&${MEMBER_ID_PARAM}=${memberNo}`,
-    cancelUrl: `${window.location.origin}/join-us/?id=${clientReferenceId}`,
+    cancelUrl: `${window.location.origin}/membership-confirmation/?id=${clientReferenceId}&paid=false&${MEMBER_ID_PARAM}=${memberNo}`,
     customerEmail: email,
     clientReferenceId: clientReferenceId,
   })

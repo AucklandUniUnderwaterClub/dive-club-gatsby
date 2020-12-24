@@ -41,6 +41,7 @@ const staticQuery = graphql`
           document {
             name
             path
+            breadcrumb
           }
         }
       }
@@ -48,8 +49,8 @@ const staticQuery = graphql`
   }
 `
 
-const findBreadcrumbNavList = (data, callback) => {
-  const node = data.struct.nodes.find(el => callback(el.document.breadcrumb))
+const findBreadcrumbNavList = (data, predicate) => {
+  const node = data.struct.nodes.find(el => predicate(el.document.breadcrumb))
   return node ? node.document.content.map(({ p }) => p || "") : null
 }
 
@@ -72,11 +73,14 @@ const PageLink = ({ pageNode: { document } }) => (
 const NavbarDropdownItem = ({ menu: [group, list] }) => {
   // TODO: sort by list order if it exists, otherwise show all group nodes
   // TODO: allow first element with same name as group to be linked directly on navbar
+  // Filter is to remove nodes from sub-subfolder documents
   return (
     <Navbar.Item dropdown hoverable href="#">
       <Navbar.Link>{group.name}</Navbar.Link>
       <Navbar.Dropdown>
-        {group.nodes.map(({ document }) => (
+        {group.nodes
+          .filter(node => node.document.breadcrumb.length === 1)
+          .map(({ document }) => (
           <NavItemLink key={document.name} to={document.path}>
             {document.name}
           </NavItemLink>

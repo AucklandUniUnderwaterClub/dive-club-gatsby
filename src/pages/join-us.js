@@ -37,7 +37,6 @@ const doCardPayment = async (
   price,
   setResponse
 ) => {
-  // TODO handle different prices
   // const stripe = await getStripe()
   const stripe = await stripePromise
   const { error } = await stripe.redirectToCheckout({
@@ -50,7 +49,7 @@ const doCardPayment = async (
   })
   if (error) {
     console.error(error)
-    setResponse({ result: "error", message: error.message })
+    setResponse(`Payment error: ${error.message}`)
   }
 }
 
@@ -85,32 +84,37 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
   const price = isStudent(data[studentStatusName])
     ? prices.student
     : prices.nonStudent
-  console.log(data)
-  let response = await fetch(process.env.GATSBY_URL_SUBMIT_MEMBERSHIP, {
-    method: "POST",
-    cache: "no-cache",
-    referrerPolicy: "no-referrer",
-    redirect: "follow",
-    body: JSON.stringify(data),
-  })
+  try {
+    let response = await fetch(process.env.GATSBY_URL_SUBMIT_MEMBERSHIP, {
+      method: "POST",
+      cache: "no-cache",
+      referrerPolicy: "no-referrer",
+      redirect: "follow",
+      body: JSON.stringify(data),
+    })
 
-  if (!response.ok) {
-    // TODO better UI error handle
-    console.error("error response:", response)
-    setResponse({ result: "error", response: response })
+    if (!response.ok) {
+      // TODO better UI error handle
+      console.error("error response:", response)
+      setResponse(`Error: ${response}`)
+      setIsLoading(false)
+      return
+    }
+    setResponse("Recieving response...")
+    const responseData = await response.json()
+    console.log("response ok:", responseData)
+    pay[paymentMethod](
+      clientReferenceId,
+      responseData?.id,
+      email,
+      price,
+      setResponse
+    )
+  } catch (e) {
+    console.error(e)
+    setResponse("Oops, some error occured :(")
     setIsLoading(false)
-    return
   }
-  setResponse({ result: "ok", status: "awaiting response data" })
-  const responseData = await response.json()
-  console.log("response ok:", responseData)
-  pay[paymentMethod](
-    clientReferenceId,
-    responseData?.id,
-    email,
-    price,
-    setResponse
-  )
 }
 
 // TODO put price data merge somewhere else (with build time execution)
@@ -157,7 +161,7 @@ const JoinUsPage = ({
         sessionId={id}
         prices={prices}
       />
-      {submissionResponse && JSON.stringify(submissionResponse)}
+      {submissionResponse && submissionResponse}
     </Layout>
   )
 }

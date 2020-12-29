@@ -17,7 +17,7 @@ export default ({ data: { trip } }) => (
     <Heading subtitle size={5} className="has-text-centered">
       {trip.daysDiving && `Number of Days Diving: ${trip.daysDiving}`}
     </Heading>
-    TODO: page formatting
+    {/* TODO: page formatting */}
     <br />
     Skill: {trip.skill}
     <br />

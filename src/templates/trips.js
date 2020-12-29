@@ -92,7 +92,7 @@ export default ({
         </Tile>
       ))}
     </Tile>
-    TODO: filter out past trips
+    {/* TODO: filter out past trips */}
   </Layout>
 )
 

@@ -13,7 +13,6 @@ const MembershipConfirmationPage = ({ location: { state, search } }) => {
   const membershipNo = state?.membershipNo
     ? state.membershipNo
     : searchParams.get(MEMBER_ID_PARAM)
-  // TODO show bank/cash payment information if payment not confirmed
   // TODO better page interface?
   return (
     <Layout title={paid ? "Membership Confirmed!" : "Details Registered"}>

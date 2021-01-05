@@ -105,12 +105,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        short_name: `AUUC`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
-        display: `minimal-ui`,
+        background_color: `#1e73be`,
+        theme_color: `#1e73be`,
+        display: `browser`,
         icon: `src/images/auuc-icon.png`, // This path is relative to the root of the site.
       },
     },

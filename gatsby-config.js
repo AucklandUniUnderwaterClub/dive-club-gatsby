@@ -29,7 +29,7 @@ module.exports = {
         // To fetch only documents to specific folders
         // folders Ids can be found in Google Drive URLs
         // https://drive.google.com/drive/folders/FOLDER_ID
-        folders: ["1wpje2koJLA3WqvgyxFNdOCySyWoaJsAh"],
+        folders: [process.env.GOOGLE_DRIVE_DOCS_SOURCE_FOLDER_ID],
         // You could need to fetch additional documents fields to your nodes
         // All available options: https://developers.google.com/drive/api/v3/reference/files#resource
         // fields: ["ownedByMe", "shared"],
@@ -40,7 +40,9 @@ module.exports = {
         // fieldsDefault: {draft: false},
         // To ignore some folder in the tree
         // It can be folder names or IDs
-        ignoredFolders: ["Drafts"],
+        ignoredFolders: process.env.INCLUDE_DRAFT_FOLDER_PAGES
+          ? []
+          : ["Drafts"],
         // Compute extra data for each document
         // enhanceDocument: (document) => {
         //   const isPost = document.breadcrumb && document.breadcrumb[1] === "posts"
@@ -57,7 +59,7 @@ module.exports = {
       resolve: "gatsby-source-google-spreadsheet",
       options: {
         // https://docs.google.com/spreadsheets/d/<spreadsheetId>/edit#gid=0
-        spreadsheetId: "1VxdDZktWOLXf-UQO0scBXb_Q_1pA_rNFcYG5L7jLqPA",
+        spreadsheetId: process.env.GOOGLE_SOURCE_SHEET_ID,
         // The `spreadsheetName` is recommended, but optional
         // It is used as part of the id's during the node creation, as well as in the generated GraphQL-schema
         // If you are sourcing multiple sheets, you can set this to distringuish between the source data

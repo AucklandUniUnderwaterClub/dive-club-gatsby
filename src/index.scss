@@ -35,6 +35,19 @@ $card-content-padding: 1rem;
   }
 }
 
+@media screen and (min-width: $tablet) {
+  .order-1-tablet {
+    order: 1;
+  }
+}
+
+.hover-link-light {
+  transition: 0.2s;
+}
+.hover-link-light:hover {
+  background: $link-light;
+}
+
 .navbar-start {
   flex-grow: 1;
   justify-content: center;

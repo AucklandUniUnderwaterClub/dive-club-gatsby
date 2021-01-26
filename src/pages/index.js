@@ -1,5 +1,6 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+import Img from "gatsby-image"
 import {
   Card,
   Container,
@@ -27,6 +28,8 @@ import TripCard from "../components/tripCard"
 const IndexPage = ({
   data: {
     allGoogleSpreadsheetTrips: { trips },
+    allGoogleSpreadsheetAffiliations: { affiliations },
+    affiliateImage,
   },
 }) => (
   <Layout section={false}>
@@ -132,6 +135,70 @@ const IndexPage = ({
         </Tile>
       </Container>
     </Section>
+    <Section>
+      <Container>
+        <Heading size={4} className="is-uppercase has-text-centered">
+          Get Great Deals With Our partners!
+        </Heading>
+        <Heading
+          subtitle
+          size={6}
+          renderAs="h2"
+          className="is-italic has-text-centered has-text-grey"
+        >
+          We have good relationships with several dive businesses, with
+          {/* TODO: click on the
+          affiliations tab to see all the */}{" "}
+          great deals you can get as a member!
+        </Heading>
+        <Level>
+          <Level.Item className="order-1-tablet">
+            <Img
+              fixed={affiliateImage.childImageSharp.fixed}
+              alt="AUUC proudly affiliated with"
+            />
+          </Level.Item>
+          {affiliations.slice(0, 2).map(
+            (affiliate, index) =>
+              affiliate.image?.childImageSharp && (
+                <Level.Item style={{ order: index }} key={index}>
+                  <a className="hover-link-light" href={affiliate.linkUrl}>
+                    <Img
+                      className="has-margin-10"
+                      fixed={affiliate.image.childImageSharp.fixed}
+                      alt={affiliate.imageAlt}
+                    />
+                  </a>
+                </Level.Item>
+              )
+          )}
+        </Level>
+        <Tile
+          kind="ancestor"
+          className="wrap align-items-center justify-center"
+        >
+          {affiliations.slice(2).map(
+            (affiliate, index) =>
+              affiliate.image && (
+                <Tile kind="parent" size={2} key={index}>
+                  <Tile kind="child" className="has-text-centered">
+                    <a
+                      className="is-inline-block hover-link-light"
+                      href={affiliate.linkUrl}
+                    >
+                      <Img
+                        className="has-margin-10"
+                        fixed={affiliate.image.childImageSharp.fixed}
+                        alt={affiliate.imageAlt}
+                      />
+                    </a>
+                  </Tile>
+                </Tile>
+              )
+          )}
+        </Tile>
+      </Container>
+    </Section>
   </Layout>
 )
 
@@ -154,6 +221,26 @@ export const query = graphql`
         childPages: children {
           ... on SitePage {
             path
+          }
+        }
+      }
+    }
+    affiliateImage: file(relativePath: { eq: "auuc-affiliates.jpg" }) {
+      childImageSharp {
+        fixed(width: 210) {
+          ...GatsbyImageSharpFixed
+        }
+      }
+    }
+    allGoogleSpreadsheetAffiliations {
+      affiliations: nodes {
+        imageAlt
+        linkUrl
+        image {
+          childImageSharp {
+            fixed(width: 140) {
+              ...GatsbyImageSharpFixed
+            }
           }
         }
       }

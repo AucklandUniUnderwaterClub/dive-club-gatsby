@@ -107,7 +107,7 @@ const submit = (clientReferenceId, setResponse, setIsLoading, prices) => async (
       clientReferenceId,
       responseData?.id,
       email,
-      price,
+      price.stripe,
       setResponse
     )
   } catch (e) {
@@ -122,13 +122,27 @@ const mergePriceData = (pricePeriods, stripePrices) => {
   const currentPeriod = pricePeriods.find(
     period => period.startDate >= 0 && period.endDate <= 0
   )
+  const nonStudentStripe = stripePrices.find(
+    price => price.id === currentPeriod.nonStudentPriceStripeId
+  )
+  const studentStripe = stripePrices.find(
+    price => price.id === currentPeriod.studentPriceStripeId
+  )
   return {
-    student: stripePrices.find(
-      price => price.id === currentPeriod.studentPriceStripeId
-    ),
-    nonStudent: stripePrices.find(
-      price => price.id === currentPeriod.nonStudentPriceStripeId
-    ),
+    student: {
+      price: currentPeriod.studentPrice.toFixed(2),
+      stripe: {
+        id: studentStripe?.id,
+        price: (studentStripe?.unit_amount / 100).toFixed(2),
+      },
+    },
+    nonStudent: {
+      price: currentPeriod.nonStudentPrice.toFixed(2),
+      stripe: {
+        id: nonStudentStripe?.id,
+        price: (nonStudentStripe?.unit_amount / 100).toFixed(2),
+      },
+    },
   }
 }
 
@@ -172,7 +186,9 @@ export const query = graphql`
       pricePeriods: nodes {
         startDate(difference: "days")
         endDate(difference: "days")
+        studentPrice
         studentPriceStripeId
+        nonStudentPrice
         nonStudentPriceStripeId
       }
     }

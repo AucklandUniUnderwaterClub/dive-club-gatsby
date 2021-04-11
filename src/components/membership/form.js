@@ -23,10 +23,9 @@ const MembershipForm = ({ onSubmit, isLoading, sessionId, prices }) => {
   })
   const studentStatus = formContext.watch(studentStatusName)
   const price = studentStatus
-    ? (
-        (isStudent(studentStatus) ? prices.student : prices.nonStudent)
-          .unit_amount / 100
-      ).toFixed(2)
+    ? isStudent(studentStatus)
+      ? prices.student
+      : prices.nonStudent
     : null
   return (
     <form onSubmit={formContext.handleSubmit(onSubmit)}>
@@ -55,19 +54,7 @@ const MembershipForm = ({ onSubmit, isLoading, sessionId, prices }) => {
       </Box>
       <Box>
         <Heading>Payment Method</Heading>
-        <PaymentMethods formContext={formContext} />
-        {price && (
-          <Content>
-            <input
-              name="amount-due"
-              value={price}
-              ref={formContext.register}
-              hidden
-              readOnly
-            />
-            <b>Total:</b> ${price}
-          </Content>
-        )}
+        <PaymentMethods formContext={formContext} prices={price} />
       </Box>
       <Button type="submit" color="primary" loading={isLoading}>
         Submit

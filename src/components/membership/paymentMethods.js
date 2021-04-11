@@ -29,13 +29,23 @@ export const BankDetails = () => (
   </>
 )
 
-const MembershipPaymentMethod = ({ formContext: { register } }) => {
+const MembershipPaymentMethod = ({ formContext: { register }, prices }) => {
   const [paymentMethod, setPaymentMethod] = useState(CARD)
   return (
     <>
-      {/* <input name={inputName} value={paymentMethod} hidden /> */}
       <Content>
+        {prices && (
+          <input
+            name="amount-due"
+            value={prices.price}
+            ref={register}
+            hidden
+            readOnly
+          />
+        )}
         <p>Your membership will be confirmed once payment has been received.</p>
+        <b>Total:</b> $
+        {paymentMethod === CARD ? prices?.stripe.price : prices?.price}
         <p>Please select a payment method:</p>
       </Content>
       <Field>
@@ -94,7 +104,10 @@ const MembershipPaymentMethod = ({ formContext: { register } }) => {
         <Content>
           {paymentMethod === CARD && (
             <>
-              <p>Pay with your Debit/Credit Card - small fee applies</p>
+              <p>
+                Pay with your Debit/Credit Card - small fee applies. Total
+                including the fee: ${prices?.stripe.price}
+              </p>
             </>
           )}
           {paymentMethod === TRANSFER && (
